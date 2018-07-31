@@ -1,0 +1,26 @@
+<script type="text/javascript">
+let oHtml = '<p><img src="http://file-10040459.file.myqcloud.com/70f33249e18fd6668abcd9c9214320eb.jpg" width="12" height="12" style="border:1px solid;width:12px;height:23px;max-width:23.3%;" /></p><p><strong>三、市场要闻</strong></p><p>美国</p>'
+
+let allImgTag = oHtml.match(/<img .*?>/g)   
+
+allImgTag && allImgTag.forEach(oImgHtml=>{
+	let imgHtml = oImgHtml.replace(/height=["|'](\d*(.\d+)*)%*["|']/g,'')
+
+	let matchedStyle = imgHtml.match(/(style=".*?")|(style='.*?')/g) 
+	// 有Style属性
+	if( matchedStyle && matchedStyle.length ){
+	  let oStyle = matchedStyle[0]
+	  let style = oStyle.replace(/(max-width|height):(\d*(.\d+)*)(%|px|pt)+;*/g,'')
+
+	  style = style.replace('style="', 'style="max-width:100%;').replace('style=\'', 'style=\'max-width:100%;')
+
+	  imgHtml = imgHtml.replace(oStyle, style)
+	  oHtml = oHtml.replace(oImgHtml, imgHtml)
+	}else{
+	  imgHtml = imgHtml.replace('<img ', '<img style="max-width:100%;" ')
+	  oHtml = oHtml.replace(oImgHtml, imgHtml)
+	}
+})
+
+console.log(oHtml)
+</script>
